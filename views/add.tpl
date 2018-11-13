@@ -1,4 +1,4 @@
-<span id="addRecPanel">
+<span id="addRecPanel" ng-show="rCont.recFormShow">
     <span>
         <form name="addRecipForm" id="addRecipForm" class="" novalidate>
             <span class=""><span>Name:</span><span class=""><input type="text" name="recName" id="recName" class="" ng-model="rCont.recForm.name" placeholder="Name" required/></span></span>

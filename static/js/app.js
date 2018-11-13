@@ -2,6 +2,19 @@
 	var app = angular.module('recipUtil', []);
 	app.controller('recCont', ['$scope', '$http', function($scope, $http){
 		this.recForm = {ingreds: []};
+		this.recFormShow = false;
+
+		angular.element(document).ready(function(){
+			$http.get("/recipe/10").then(function(ret){
+				if (ret.data.success){
+					for (let i = 0; i < ret.data.recipes.length; i++){
+						ret.data.recipes[i].ingredients = ret.data.ingredients[i];
+						ret.data.recipes[i].instructions = ret.data.instructions[i];
+					}
+					$scope.recipes = ret.data.recipes;
+				}
+			});
+		});
 
 		this.AddRecipe = function(){
 			let ingNames = [];
@@ -26,11 +39,20 @@
 				}
 			});
 			this.recForm = {ingreds: []};
+			this.recFormShow = false;
 		};
 
 		this.AddRecIng = function(){
 			this.recForm.ingreds.push(this.ingForm);
 			this.ingForm = {};
+		};
+
+		//Navigate
+		this.ShowRecipeForm = function(rec_id = null){
+			if (rec_id != null){
+
+			}
+			this.recFormShow = true;
 		};
     }]);
 })();

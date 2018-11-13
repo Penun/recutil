@@ -1,6 +1,7 @@
 package models
 
 import (
+    "errors"
     "github.com/astaxie/beego/orm"
 )
 
@@ -31,7 +32,7 @@ type Method struct {
     Notes string `json:"notes"`
 }
 
-func GetRecipes() []Recipe{
+func GetRecipes() []Recipe {
     o := orm.NewOrm()
     var recipes []Recipe
     o.QueryTable("recipe").OrderBy("name").All(&recipes)
@@ -39,6 +40,17 @@ func GetRecipes() []Recipe{
         return recipes
     } else {
         return []Recipe{}
+    }
+}
+
+func GetTenRecipes() ([]Recipe, error) {
+    o := orm.NewOrm()
+    var recipes []Recipe
+    o.QueryTable("recipe").OrderBy("-id").Limit(10).All(&recipes)
+    if len(recipes) > 0 {
+        return recipes, nil
+    } else {
+        return nil, errors.New("Empty Ten")
     }
 }
 
@@ -50,6 +62,28 @@ func GetRecipe(r_id int64) Recipe {
         return recipe
     } else {
         return Recipe{}
+    }
+}
+
+func GetRecipeIngredients_R(r_id int64) ([]RecipeIngredient, error) {
+    o := orm.NewOrm()
+    var recIngrs []RecipeIngredient
+    o.QueryTable("recipe_ingredient").Filter("recipe_id", r_id).RelatedSel("ingredient").All(&recIngrs)
+    if len(recIngrs) > 0 {
+        return recIngrs, nil
+    } else {
+        return nil, errors.New("Missing Ingredients")
+    }
+}
+
+func GetMethod_R(r_id int64) (Method, error) {
+    o := orm.NewOrm()
+    method := Method{}
+    o.QueryTable("method").Filter("recipe_id", r_id).One(&method)
+    if method != (Method{}) {
+        return method, nil
+    } else {
+        return Method{}, errors.New("No Method")
     }
 }
 
