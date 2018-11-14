@@ -54,14 +54,13 @@ func GetTenRecipes() ([]Recipe, error) {
     }
 }
 
-func GetRecipe(r_id int64) Recipe {
+func GetRecipe(r_id int64) (Recipe, error) {
     o := orm.NewOrm()
     recipe := Recipe{Id: r_id}
-    err := o.Read(&recipe)
-    if err == nil {
-        return recipe
+    if err := o.Read(&recipe); err == nil {
+        return recipe, nil
     } else {
-        return Recipe{}
+        return Recipe{}, err
     }
 }
 
@@ -110,6 +109,14 @@ func AddMethod(met Method) int64 {
 	id, err := o.Insert(&met)
 	if err == nil {
 		return id
+	}
+    return 0
+}
+
+func DeleteRecipe(r_id int64) int64 {
+    o := orm.NewOrm()
+	if num, err := o.Delete(&Recipe{Id: r_id}); err == nil {
+		return num
 	}
     return 0
 }

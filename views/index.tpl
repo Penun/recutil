@@ -4,6 +4,7 @@
         <span>
             {{template "list.tpl"}}
             {{template "add.tpl"}}
+            {{template "delete.tpl"}}
         </span>
         <span ng-click="rCont.ShowRecipeForm()" ng-show="!rCont.recFormShow">+</span>
     </span>
